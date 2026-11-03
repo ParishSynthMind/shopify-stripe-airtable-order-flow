@@ -85,6 +85,13 @@ def main():
     out = {"date": time.strftime("%Y-%m-%d %H:%M:%S %Z"), "stripe_endpoint": endpoint["id"], "orders": []}
     try:
         app = build_app(s)
+        real_send, sent = app.pipeline.notifier.send, []
+
+        def recording_send(subject, text, key):   # keep a copy for the results file
+            real_send(subject, text, key)
+            sent.append({"subject": subject, "text": text, "key": key})
+        app.pipeline.notifier.send = recording_send
+        out["emails_sent"] = sent
         app.start_worker()
         server = ThreadingHTTPServer(("127.0.0.1", s.port), make_handler(app))
         threading.Thread(target=server.serve_forever, daemon=True).start()

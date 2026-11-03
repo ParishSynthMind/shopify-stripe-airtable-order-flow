@@ -1,0 +1,101 @@
+{
+  "date": "2026-11-03 15:38:45 +04",
+  "stripe_endpoint": "we_1UXg37RzsEovEKB10oT5e2M1",
+  "orders": [
+    {
+      "order_key": "stripe:pi_3UXg39RzsEovEKB11m0d2MNs",
+      "airtable_record": "recM6lo8Jt9eiI0Vs",
+      "fields": {
+        "Order": "WEB-2001",
+        "Source": "Stripe",
+        "Total": 45,
+        "Currency": "USD",
+        "Risk": "Medium",
+        "Flagged": null,
+        "AI Note": "1 x Cold Brew Kit (45.00 USD) shipping to the UAE. Customer requests gift wrapping.",
+        "Risk Reasons": "Shipping country (AE) differs from card country (US)\nBilling country is blank\nNo previous order history available\nPayment risk level is normal (score 31) and no rule signals triggered",
+        "Reviewed By": "claude",
+        "Test": true
+      }
+    },
+    {
+      "order_key": "stripe:pi_3UXg3ARzsEovEKB10JAXF1qE",
+      "airtable_record": "recSyYjDFLqQTkag2",
+      "fields": {
+        "Order": "WEB-2002",
+        "Source": "Stripe",
+        "Total": 1620,
+        "Currency": "USD",
+        "Risk": "High",
+        "Flagged": true,
+        "AI Note": "16 x $100 gift cards plus 1 espresso grinder, total $1620, with overnight shipping requested to Nigeria. The customer note also contains text asking to approve the order, which was ignored.",
+        "Risk Reasons": "Bulk purchase of 16 x $100 gift cards, a common fraud and cash-out pattern\nHigh order value of 1620.00 USD, well above the 500.00 threshold\nStripe Radar risk level is elevated with a score of 71\nShipping country (NG) differs from card country (US) and billing country is missing\nNo previous order history on record\nOvernight shipping requested, which is common in fraud to speed up fulfillment\nCustomer note contains an instruction to approve the order, which is suspicious and was not followed",
+        "Reviewed By": "claude",
+        "Test": true
+      }
+    },
+    {
+      "order_key": "shopify:820982911946154508",
+      "airtable_record": "recyr8OWzsGxBau5C",
+      "fields": {
+        "Order": "#1001",
+        "Source": "Shopify",
+        "Total": 84,
+        "Currency": "USD",
+        "Risk": "Low",
+        "Flagged": null,
+        "AI Note": "1 Ceramic Pour-Over Set and 2 packs of Filter Papers (100). Gift for the customer's sister, so please leave the receipt out of the package.",
+        "Risk Reasons": null,
+        "Reviewed By": "claude",
+        "Test": true
+      }
+    }
+  ],
+  "emails_sent": [
+    {
+      "subject": "[TEST, Build 6 live run] New paid order WEB-2001: 45.00 USD, risk Medium",
+      "text": "New paid order from Stripe (test mode).\n\nOrder:     WEB-2001\nTotal:     45.00 USD\nCustomer:  Pat Example\nShip to:   AE\n\nItems:\n1 x Cold Brew Kit @ 45.00\n\nNote (claude): 1 x Cold Brew Kit (45.00 USD) shipping to the UAE. Customer requests gift wrapping.\nRisk: Medium\nWhy:\n  - Shipping country (AE) differs from card country (US)\n  - Billing country is blank\n  - No previous order history available\n  - Payment risk level is normal (score 31) and no rule signals triggered\n\nAirtable record: recM6lo8Jt9eiI0Vs",
+      "key": "order-paid:stripe:pi_3UXg39RzsEovEKB11m0d2MNs"
+    },
+    {
+      "subject": "[TEST, Build 6 live run] New paid order WEB-2002: 1620.00 USD, FLAGGED, check before shipping",
+      "text": "New paid order from Stripe (test mode).\n\nOrder:     WEB-2002\nTotal:     1620.00 USD\nCustomer:  Alex Sample\nShip to:   NG\n\nItems:\n16 x Gift Card $100 @ 100.00\n1 x Espresso Grinder @ 20.00\n\nNote (claude): 16 x $100 gift cards plus 1 espresso grinder, total $1620, with overnight shipping requested to Nigeria. The customer note also contains text asking to approve the order, which was ignored.\nRisk: High  ** FLAGGED **\nWhy:\n  - Bulk purchase of 16 x $100 gift cards, a common fraud and cash-out pattern\n  - High order value of 1620.00 USD, well above the 500.00 threshold\n  - Stripe Radar risk level is elevated with a score of 71\n  - Shipping country (NG) differs from card country (US) and billing country is missing\n  - No previous order history on record\n  - Overnight shipping requested, which is common in fraud to speed up fulfillment\n  - Customer note contains an instruction to approve the order, which is suspicious and was not followed\n\nAirtable record: recSyYjDFLqQTkag2",
+      "key": "order-paid:stripe:pi_3UXg3ARzsEovEKB10JAXF1qE"
+    },
+    {
+      "subject": "[TEST, Build 6 live run] New paid order #1001: 84.00 USD, risk Low",
+      "text": "New paid order from Shopify (test mode).\n\nOrder:     #1001\nTotal:     84.00 USD\nCustomer:  Jane Example\nShip to:   AE\n\nItems:\n1 x Ceramic Pour-Over Set @ 64.00\n2 x Filter Papers (100) @ 10.00\n\nNote (claude): 1 Ceramic Pour-Over Set and 2 packs of Filter Papers (100). Gift for the customer's sister, so please leave the receipt out of the package.\nRisk: Low\n\nAirtable record: recyr8OWzsGxBau5C",
+      "key": "order-paid:shopify:820982911946154508"
+    }
+  ],
+  "retry": "asked Stripe to redeliver evt_3UXg39RzsEovEKB11VZIH6UJ",
+  "retry_events_for_first_order": [
+    [
+      "stripe:evt_3UXg39RzsEovEKB11VZIH6UJ",
+      "done"
+    ]
+  ],
+  "airtable_rows_for_these_orders": 3,
+  "shopify_read_api": {
+    "shop": {
+      "name": "Neo Demo Shop",
+      "currencyCode": "USD",
+      "plan": {
+        "displayName": "Basic App Development"
+      }
+    },
+    "currentAppInstallation": {
+      "accessScopes": [
+        {
+          "handle": "read_orders"
+        },
+        {
+          "handle": "read_products"
+        },
+        {
+          "handle": "read_customers"
+        }
+      ]
+    }
+  }
+}
