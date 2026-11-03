@@ -1,0 +1,6 @@
+{
+  "id": "ch_sample_0001",
+  "billing_details": {"name": "Pat Example", "email": "pat.example@example.com", "address": {"country": "AE"}},
+  "outcome": {"risk_level": "normal", "risk_score": 12, "type": "authorized"},
+  "payment_method_details": {"card": {"country": "AE", "brand": "visa"}}
+}

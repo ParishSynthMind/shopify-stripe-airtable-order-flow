@@ -1,0 +1,19 @@
+{
+  "id": 820982911946154508,
+  "name": "#1001",
+  "order_number": 1001,
+  "email": "jane.example@example.com",
+  "created_at": "2026-11-03T09:15:00+04:00",
+  "currency": "USD",
+  "total_price": "84.00",
+  "financial_status": "paid",
+  "test": true,
+  "note": "Gift for my sister, please leave out the receipt.",
+  "customer": {"first_name": "Jane", "last_name": "Example", "orders_count": 3},
+  "line_items": [
+    {"title": "Ceramic Pour-Over Set", "quantity": 1, "price": "64.00"},
+    {"title": "Filter Papers (100)", "quantity": 2, "price": "10.00"}
+  ],
+  "shipping_address": {"name": "Sam Example", "country_code": "AE"},
+  "billing_address": {"name": "Jane Example", "country_code": "AE"}
+}

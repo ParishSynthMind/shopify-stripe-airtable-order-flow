@@ -1,0 +1,24 @@
+{
+  "id": "evt_sample_0001",
+  "object": "event",
+  "type": "payment_intent.succeeded",
+  "livemode": false,
+  "data": {
+    "object": {
+      "id": "pi_sample_0001",
+      "object": "payment_intent",
+      "amount": 4500,
+      "amount_received": 4500,
+      "currency": "usd",
+      "created": 1793689200,
+      "livemode": false,
+      "latest_charge": "ch_sample_0001",
+      "receipt_email": "pat.example@example.com",
+      "metadata": {
+        "order_name": "WEB-2001",
+        "items": "[{\"title\": \"Cold Brew Kit\", \"quantity\": 1, \"unit_price\": 45.0}]"
+      },
+      "shipping": {"name": "Pat Example", "address": {"country": "AE"}}
+    }
+  }
+}
