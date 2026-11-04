@@ -20,6 +20,7 @@ import re
 import time
 import urllib.error
 import urllib.request
+from datetime import datetime
 from typing import Callable, List, Optional, Tuple
 
 from .models import Order
@@ -218,19 +219,29 @@ def _items(order: Order) -> list:
              "RowTotal": round(i.quantity * i.unit_price, 2)} for i in order.items[:MAX_ITEMS]]
 
 
-def profile_attributes(order: Order, order_count: int) -> dict:
-    """Email, name and the order facts a flow or segment filters on.
+def epoch(iso: str) -> Optional[float]:
+    try:
+        return datetime.fromisoformat((iso or "").replace("Z", "+00:00")).timestamp()
+    except ValueError:
+        return None
+
+
+def last_order_facts(order: Order) -> dict:
+    return {"Last Order Date": order.created_at or None, "Last Order ID": _text(order.order_name),
+            "Last Order Value": round(order.total, 2), "Last Order Currency": order.currency,
+            "Last Order Source": order.source}
+
+
+def profile_attributes(order: Order, order_count: int, newest: Optional[dict] = None) -> dict:
+    """Email, name and the order facts a flow or segment filters on. `newest`
+    is the customer's most recent order if it is not this one (a replay of an
+    older order must not roll 'last order' back).
     Deliberately no 'subscriptions' key: consent is not touched."""
     email = _clean_email(order)
     _check_order(order)
     first, last = _split_name(order.customer_name)
     attrs = {"email": email,
-             "properties": {"Order Count": int(order_count),
-                            "Last Order Date": order.created_at or None,
-                            "Last Order ID": _text(order.order_name),
-                            "Last Order Value": round(order.total, 2),
-                            "Last Order Currency": order.currency,
-                            "Last Order Source": order.source}}
+             "properties": {"Order Count": int(order_count), **(newest or last_order_facts(order))}}
     if first:
         attrs["first_name"] = first
     if last:
@@ -281,15 +292,19 @@ class KlaviyoSync:
     def __init__(self, client: KlaviyoClient, store=None):
         self.client, self.store = client, store
 
-    def order_count(self, order: Order) -> int:
-        local = self.store.count_customer_order(order.customer_email, order.order_key) if self.store else 1
+    def order_history(self, order: Order) -> Tuple[int, dict]:
+        facts = last_order_facts(order)
+        count, newest = (self.store.record_customer_order(order.customer_email, order.order_key,
+                                                          epoch(order.created_at), facts)
+                         if self.store else (1, facts))
         if order.customer_order_count is not None:
-            return max(int(order.customer_order_count), 1)
-        return local
+            count = max(int(order.customer_order_count), 1)
+        return count, newest or facts
 
     def placed_order(self, order: Order) -> dict:
-        attrs = profile_attributes(order, self.order_count(order))
-        event = placed_order_event(order)
+        event = placed_order_event(order)       # validates before anything is recorded
+        count, newest = self.order_history(order)
+        attrs = profile_attributes(order, count, newest)
         profile_id = self.client.upsert_profile(attrs)
         self.client.create_event(event)
         log.info("Klaviyo: %s sent for %s (profile %s)%s", PLACED_ORDER, order.order_key,

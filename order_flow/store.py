@@ -4,10 +4,11 @@ second guard if two deliveries race each other."""
 from __future__ import annotations
 
 import hashlib
+import json
 import sqlite3
 import threading
 import time
-from typing import Optional
+from typing import Optional, Tuple
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS events (
@@ -35,10 +36,13 @@ CREATE TABLE IF NOT EXISTS klaviyo_sync (
     body       BLOB,                   -- kept only while failed, for replay
     updated_at REAL NOT NULL
 );
--- Orders per customer, for Klaviyo's order count. Only a hash of the email.
+-- Orders per customer, for Klaviyo's order count and "last order". Only a
+-- hash of the email is kept, never the address.
 CREATE TABLE IF NOT EXISTS customer_orders (
     email_hash TEXT NOT NULL,
     order_key  TEXT NOT NULL,
+    ordered_at REAL,                   -- epoch seconds, so time zones compare correctly
+    facts      TEXT,                   -- JSON: order id, value, currency, source, date
     PRIMARY KEY (email_hash, order_key)
 );
 """
@@ -120,12 +124,17 @@ class EventStore:
                                 "JOIN events e ON e.event_id = k.event_id WHERE k.status='failed'").fetchall()
         return [{"event_id": r[0], "kind": r[1], "source": r[2], "body": r[3]} for r in rows]
 
-    def count_customer_order(self, email: str, order_key: str) -> int:
-        """Records this order against the customer (idempotent) and returns how
-        many distinct orders that customer has had through this service."""
+    def record_customer_order(self, email: str, order_key: str, ordered_at: Optional[float] = None,
+                              facts: Optional[dict] = None) -> Tuple[int, Optional[dict]]:
+        """Records this order against the customer (idempotent) and returns
+        (how many distinct orders they have had here, facts of their newest one).
+        A replay of an old order therefore never becomes the 'last order'."""
         h = hashlib.sha256((email or "").strip().lower().encode()).hexdigest()
         with self._lock:
-            self._db.execute("INSERT OR IGNORE INTO customer_orders(email_hash, order_key) VALUES (?,?)",
-                             (h, order_key))
+            self._db.execute("INSERT OR IGNORE INTO customer_orders(email_hash, order_key, ordered_at, facts) "
+                             "VALUES (?,?,?,?)", (h, order_key, ordered_at, json.dumps(facts or {})))
             self._db.commit()
-            return self._db.execute("SELECT COUNT(*) FROM customer_orders WHERE email_hash=?", (h,)).fetchone()[0]
+            count = self._db.execute("SELECT COUNT(*) FROM customer_orders WHERE email_hash=?", (h,)).fetchone()[0]
+            newest = self._db.execute("SELECT facts FROM customer_orders WHERE email_hash=? "
+                                      "ORDER BY COALESCE(ordered_at, 0) DESC, rowid DESC LIMIT 1", (h,)).fetchone()
+            return count, (json.loads(newest[0]) if newest and newest[0] else None)

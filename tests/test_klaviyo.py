@@ -217,17 +217,48 @@ def test_read_helpers_follow_pagination_and_filters():
 def test_order_count_from_local_store_is_idempotent_and_uses_hash_only():
     store = EventStore()
     sync = KlaviyoSync(KlaviyoClient("", dry_run=True), store)
-    assert sync.order_count(ORDER) == 1
-    assert sync.order_count(ORDER) == 1                          # same order again: still 1
-    assert sync.order_count(order(order_key="stripe:pi_2")) == 2
-    assert sync.order_count(order(customer_email="pat.example@example.com", order_key="stripe:pi_3")) == 3
+    assert sync.order_history(ORDER)[0] == 1
+    assert sync.order_history(ORDER)[0] == 1                     # same order again: still 1
+    assert sync.order_history(order(order_key="stripe:pi_2"))[0] == 2
+    assert sync.order_history(order(customer_email="pat.example@example.com", order_key="stripe:pi_3"))[0] == 3
     dump = "\n".join(store._db.iterdump())
     assert "example.com" not in dump.lower()                     # no email stored, only a hash
 
 
 def test_shopify_orders_count_wins():
     sync = KlaviyoSync(KlaviyoClient("", dry_run=True), EventStore())
-    assert sync.order_count(order(customer_order_count=7)) == 7
+    assert sync.order_history(order(customer_order_count=7))[0] == 7
+
+
+def test_replayed_older_order_does_not_roll_back_last_order():
+    """Found in the live run: re-sending order A after order D set 'Last Order' back to A."""
+    c = KlaviyoClient("", dry_run=True)
+    sync = KlaviyoSync(c, EventStore())
+    a = order(order_key="stripe:pi_A", order_name="A", total=45.0, created_at="2026-11-04T06:23:56+00:00")
+    d = order(order_key="stripe:pi_D", order_name="D", total=48.0, created_at="2026-11-04T10:24:05+04:00")
+    for o in (a, d, a):
+        sync.placed_order(o)
+    last = c.dry_run_log[-2]["body"]["data"]["attributes"]["properties"]      # profile call of the replay
+    assert last["Last Order ID"] == "D" and last["Last Order Value"] == 48.0 and last["Order Count"] == 2
+    assert c.dry_run_log[-1]["body"]["data"]["attributes"]["unique_id"] == "placed-order:stripe:pi_A"
+
+
+def test_time_zones_compared_as_instants():
+    c = KlaviyoClient("", dry_run=True)
+    sync = KlaviyoSync(c, EventStore())
+    later_utc = order(order_key="k1", order_name="later", created_at="2026-11-04T07:00:00Z")
+    earlier_dubai = order(order_key="k2", order_name="earlier", created_at="2026-11-04T10:30:00+04:00")
+    sync.placed_order(later_utc)
+    sync.placed_order(earlier_dubai)
+    assert c.dry_run_log[-2]["body"]["data"]["attributes"]["properties"]["Last Order ID"] == "later"
+
+
+def test_invalid_order_is_not_recorded_in_history():
+    store = EventStore()
+    sync = KlaviyoSync(KlaviyoClient("", dry_run=True), store)
+    with pytest.raises(ValidationError):
+        sync.placed_order(order(total=-5.0))
+    assert store._db.execute("SELECT COUNT(*) FROM customer_orders").fetchone()[0] == 0
 
 
 # --- through the webhook app ---------------------------------------------------------

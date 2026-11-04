@@ -1,0 +1,204 @@
+{
+  "date": "2026-11-04 10:23:54 +04",
+  "klaviyo_revision": "2026-10-15",
+  "stripe_endpoint": "we_1UXxbyRzsEovEKB1J7CeMD1j",
+  "orders": [],
+  "profiles": [
+    {
+      "inbox": "test inbox 1",
+      "profile_id": "01M6JKN89QPV6RHPHC5HYXN1GK",
+      "name": "Test OrderFlow-A",
+      "properties": {
+        "Order Count": 2,
+        "Last Order Date": "2026-11-04T06:23:56+00:00",
+        "Last Order ID": "KLV-TEST-A-73435",
+        "Last Order Value": 45.0,
+        "Last Order Currency": "USD",
+        "Last Order Source": "Stripe"
+      },
+      "email_marketing_consent": "NEVER_SUBSCRIBED",
+      "events_per_order": {
+        "stripe:pi_3UXxc0RzsEovEKB11Op8Q21A": [
+          {
+            "metric": "Placed Order",
+            "event_id": "7zPaKXXsWdj",
+            "OrderId": "KLV-TEST-A-73435",
+            "value": 45.0,
+            "items": [
+              "Cold Brew Kit (TEST)"
+            ],
+            "datetime": "2026-11-04T06:23:56+00:00",
+            "consent_recorded": null
+          }
+        ],
+        "stripe:pi_3UXxc7RzsEovEKB11AnayOn9": [
+          {
+            "metric": "Placed Order",
+            "event_id": "7zPaJQ7Liei",
+            "OrderId": "KLV-TEST-D-73443",
+            "value": 48.0,
+            "items": [
+              "Coffee Beans 1kg (TEST)"
+            ],
+            "datetime": "2026-11-04T06:24:03+00:00",
+            "consent_recorded": null
+          }
+        ]
+      }
+    },
+    {
+      "inbox": "test inbox 2",
+      "profile_id": "01M6JKNDEVKDDZRGAZ71RV68PY",
+      "name": "Test OrderFlow-B",
+      "properties": {
+        "Order Count": 1,
+        "Last Order Date": "2026-11-04T06:24:01+00:00",
+        "Last Order ID": "KLV-TEST-B-73440",
+        "Last Order Value": 73.0,
+        "Last Order Currency": "USD",
+        "Last Order Source": "Stripe"
+      },
+      "email_marketing_consent": "NEVER_SUBSCRIBED",
+      "events_per_order": {
+        "stripe:pi_3UXxc5RzsEovEKB105kbgmhZ": [
+          {
+            "metric": "Placed Order",
+            "event_id": "7zPaKXu9Nsp",
+            "OrderId": "KLV-TEST-B-73440",
+            "value": 73.0,
+            "items": [
+              "Pour Over Set (TEST)",
+              "Filter Papers x100 (TEST)"
+            ],
+            "datetime": "2026-11-04T06:24:01+00:00",
+            "consent_recorded": null
+          }
+        ],
+        "stripe:cs_test_a1vp9Hk7VZISO8n4N0GTM131HcW2PTgyNT0DM5KYMdzN9TzVLW4ulwNJF5": [
+          {
+            "metric": "Started Checkout",
+            "event_id": "7zPanNzinTf",
+            "OrderId": "KLV-TEST-CART",
+            "value": 45.0,
+            "items": [
+              "Cold Brew Kit (TEST)"
+            ],
+            "datetime": "2026-11-04T06:24:06+00:00",
+            "consent_recorded": "not collected"
+          }
+        ]
+      }
+    },
+    {
+      "inbox": "test inbox 3",
+      "profile_id": "01M6JKNJPVBQ8F2NTR7XTBXA6B",
+      "name": "Test OrderFlow-C",
+      "properties": {
+        "Order Count": 1,
+        "Last Order Date": "2026-11-04T06:24:02+00:00",
+        "Last Order ID": "KLV-TEST-C-73442",
+        "Last Order Value": 129.0,
+        "Last Order Currency": "USD",
+        "Last Order Source": "Stripe"
+      },
+      "email_marketing_consent": "NEVER_SUBSCRIBED",
+      "events_per_order": {
+        "stripe:pi_3UXxc6RzsEovEKB11iDMvYEx": [
+          {
+            "metric": "Placed Order",
+            "event_id": "7zPaHHHXNct",
+            "OrderId": "KLV-TEST-C-73442",
+            "value": 129.0,
+            "items": [
+              "Espresso Grinder (TEST)"
+            ],
+            "datetime": "2026-11-04T06:24:02+00:00",
+            "consent_recorded": null
+          }
+        ]
+      }
+    },
+    {
+      "inbox": "test inbox 4",
+      "profile_id": "01M6JKNWWE49HR8Q04TPKJ08M5",
+      "name": "Test OrderFlow-Shopify",
+      "properties": {
+        "Order Count": 3,
+        "Last Order Date": "2026-11-03T09:15:00+04:00",
+        "Last Order ID": "#1001",
+        "Last Order Value": 84.0,
+        "Last Order Currency": "USD",
+        "Last Order Source": "Shopify"
+      },
+      "email_marketing_consent": "NEVER_SUBSCRIBED",
+      "events_per_order": {
+        "shopify:1793773444319": [
+          {
+            "metric": "Placed Order",
+            "event_id": "7zPaGAQSfTG",
+            "OrderId": "#1001",
+            "value": 84.0,
+            "items": [
+              "Ceramic Pour-Over Set",
+              "Filter Papers (100)"
+            ],
+            "datetime": "2026-11-03T05:15:00+00:00",
+            "consent_recorded": null
+          }
+        ]
+      }
+    }
+  ],
+  "stripe_redelivery": [
+    [
+      "stripe:evt_3UXxc0RzsEovEKB11tMFyIwj",
+      "done"
+    ]
+  ],
+  "direct_resends_of_first_order": 2,
+  "klaviyo_sync_rows": [
+    {
+      "event_id": "stripe:evt_3UXxc0RzsEovEKB11tMFyIwj",
+      "order_key": "stripe:pi_3UXxc0RzsEovEKB11Op8Q21A",
+      "kind": "placed",
+      "status": "done",
+      "detail": "placed-order:stripe:pi_3UXxc0RzsEovEKB11Op8Q21A"
+    },
+    {
+      "event_id": "stripe:evt_3UXxc5RzsEovEKB109FzJ1Bh",
+      "order_key": "stripe:pi_3UXxc5RzsEovEKB105kbgmhZ",
+      "kind": "placed",
+      "status": "done",
+      "detail": "placed-order:stripe:pi_3UXxc5RzsEovEKB105kbgmhZ"
+    },
+    {
+      "event_id": "stripe:evt_3UXxc6RzsEovEKB114qGrTcx",
+      "order_key": "stripe:pi_3UXxc6RzsEovEKB11iDMvYEx",
+      "kind": "placed",
+      "status": "done",
+      "detail": "placed-order:stripe:pi_3UXxc6RzsEovEKB11iDMvYEx"
+    },
+    {
+      "event_id": "stripe:evt_3UXxc7RzsEovEKB11d9KUZ7I",
+      "order_key": "stripe:pi_3UXxc7RzsEovEKB11AnayOn9",
+      "kind": "placed",
+      "status": "done",
+      "detail": "placed-order:stripe:pi_3UXxc7RzsEovEKB11AnayOn9"
+    },
+    {
+      "event_id": "shopify:f522ab72-93d2-49bf-89ce-62470b61eb92",
+      "order_key": "shopify:1793773444319",
+      "kind": "placed",
+      "status": "done",
+      "detail": "placed-order:shopify:1793773444319"
+    },
+    {
+      "event_id": "stripe:evt_1UXxcARzsEovEKB1MVjAwgUV",
+      "order_key": "stripe:cs_test_a1vp9Hk7VZISO8n4N0GTM131HcW2PTgyNT0DM5KYMdzN9TzVLW4ulwNJF5",
+      "kind": "checkout",
+      "status": "done",
+      "detail": "started-checkout:stripe:cs_test_a1vp9Hk7VZISO8n4N0GTM131HcW2PTgyNT0DM5KYMdzN9TzVLW4ulwNJF5"
+    }
+  ],
+  "first_order_key": "stripe:pi_3UXxc0RzsEovEKB11Op8Q21A"
+}
