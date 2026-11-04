@@ -1,0 +1,45 @@
+{
+  "date": "2026-11-04 10:46:43 +04",
+  "flow": {
+    "id": "UbjtJz",
+    "name": "Thanks for your order (order flow TEST)",
+    "trigger": "metric Placed Order (API)",
+    "status": "live during the test"
+  },
+  "subject": "[TEST] Thanks for your order KLV-TEST-B-74251",
+  "delivery": "3 emails found by a read-only IMAP check in the test mailbox (Gmail Spam folder), subjects with the order id filled in",
+  "not_triggered": {
+    "test inbox 1, order D": "second order 8 seconds after the first: no second email (not investigated)",
+    "test inbox 4, Shopify sample": "event time is the sample's 2026-11-03 order date; no email (probably too old to trigger a flow)"
+  },
+  "test inbox 1": {
+    "Received Email": [
+      [
+        "2026-11-04T06:37:46+00:00",
+        "UbjtJz",
+        "[TEST] Thanks for your order {{ event.OrderId }}"
+      ]
+    ]
+  },
+  "test inbox 2": {
+    "Received Email": [
+      [
+        "2026-11-04T06:37:52+00:00",
+        "UbjtJz",
+        "[TEST] Thanks for your order {{ event.OrderId }}"
+      ]
+    ]
+  },
+  "test inbox 3": {
+    "Received Email": [
+      [
+        "2026-11-04T06:37:59+00:00",
+        "UbjtJz",
+        "[TEST] Thanks for your order {{ event.OrderId }}"
+      ]
+    ]
+  },
+  "test inbox 4": {
+    "Received Email": []
+  }
+}

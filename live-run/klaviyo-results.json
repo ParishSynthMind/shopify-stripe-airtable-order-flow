@@ -1,46 +1,46 @@
 {
-  "date": "2026-11-04 10:23:54 +04",
+  "date": "2026-11-04 10:37:24 +04",
   "klaviyo_revision": "2026-10-15",
-  "stripe_endpoint": "we_1UXxbyRzsEovEKB1J7CeMD1j",
+  "stripe_endpoint": "we_1UXxp2RzsEovEKB1QY3u0lfH",
   "orders": [],
   "profiles": [
     {
       "inbox": "test inbox 1",
-      "profile_id": "01M6JKN89QPV6RHPHC5HYXN1GK",
+      "profile_id": "01M6JMDXVF2SAJNTDYXF6PH9JG",
       "name": "Test OrderFlow-A",
       "properties": {
         "Order Count": 2,
-        "Last Order Date": "2026-11-04T06:23:56+00:00",
-        "Last Order ID": "KLV-TEST-A-73435",
-        "Last Order Value": 45.0,
+        "Last Order Date": "2026-11-04T06:37:34+00:00",
+        "Last Order ID": "KLV-TEST-D-74253",
+        "Last Order Value": 48.0,
         "Last Order Currency": "USD",
         "Last Order Source": "Stripe"
       },
       "email_marketing_consent": "NEVER_SUBSCRIBED",
       "events_per_order": {
-        "stripe:pi_3UXxc0RzsEovEKB11Op8Q21A": [
+        "stripe:pi_3UXxp4RzsEovEKB11fc5QxCf": [
           {
             "metric": "Placed Order",
-            "event_id": "7zPaKXXsWdj",
-            "OrderId": "KLV-TEST-A-73435",
+            "event_id": "7zPeQki5ewJ",
+            "OrderId": "KLV-TEST-A-74245",
             "value": 45.0,
             "items": [
               "Cold Brew Kit (TEST)"
             ],
-            "datetime": "2026-11-04T06:23:56+00:00",
+            "datetime": "2026-11-04T06:37:26+00:00",
             "consent_recorded": null
           }
         ],
-        "stripe:pi_3UXxc7RzsEovEKB11AnayOn9": [
+        "stripe:pi_3UXxpBRzsEovEKB11mescaM8": [
           {
             "metric": "Placed Order",
-            "event_id": "7zPaJQ7Liei",
-            "OrderId": "KLV-TEST-D-73443",
+            "event_id": "7zPfwd3TdN6",
+            "OrderId": "KLV-TEST-D-74253",
             "value": 48.0,
             "items": [
               "Coffee Beans 1kg (TEST)"
             ],
-            "datetime": "2026-11-04T06:24:03+00:00",
+            "datetime": "2026-11-04T06:37:34+00:00",
             "consent_recorded": null
           }
         ]
@@ -48,42 +48,42 @@
     },
     {
       "inbox": "test inbox 2",
-      "profile_id": "01M6JKNDEVKDDZRGAZ71RV68PY",
+      "profile_id": "01M6JME35Q3P2726GA2ECGEC7H",
       "name": "Test OrderFlow-B",
       "properties": {
         "Order Count": 1,
-        "Last Order Date": "2026-11-04T06:24:01+00:00",
-        "Last Order ID": "KLV-TEST-B-73440",
+        "Last Order Date": "2026-11-04T06:37:31+00:00",
+        "Last Order ID": "KLV-TEST-B-74251",
         "Last Order Value": 73.0,
         "Last Order Currency": "USD",
         "Last Order Source": "Stripe"
       },
       "email_marketing_consent": "NEVER_SUBSCRIBED",
       "events_per_order": {
-        "stripe:pi_3UXxc5RzsEovEKB105kbgmhZ": [
+        "stripe:pi_3UXxp9RzsEovEKB10NdFQ7Fj": [
           {
             "metric": "Placed Order",
-            "event_id": "7zPaKXu9Nsp",
-            "OrderId": "KLV-TEST-B-73440",
+            "event_id": "7zPeww5iSAU",
+            "OrderId": "KLV-TEST-B-74251",
             "value": 73.0,
             "items": [
               "Pour Over Set (TEST)",
               "Filter Papers x100 (TEST)"
             ],
-            "datetime": "2026-11-04T06:24:01+00:00",
+            "datetime": "2026-11-04T06:37:31+00:00",
             "consent_recorded": null
           }
         ],
-        "stripe:cs_test_a1vp9Hk7VZISO8n4N0GTM131HcW2PTgyNT0DM5KYMdzN9TzVLW4ulwNJF5": [
+        "stripe:cs_test_a14smC8hRbfFB0uhMAr6KC48smeuWKYpfWmzf1uw53FpbSry9xuekg4uvL": [
           {
             "metric": "Started Checkout",
-            "event_id": "7zPanNzinTf",
+            "event_id": "7zPfxkqhdJ9",
             "OrderId": "KLV-TEST-CART",
             "value": 45.0,
             "items": [
               "Cold Brew Kit (TEST)"
             ],
-            "datetime": "2026-11-04T06:24:06+00:00",
+            "datetime": "2026-11-04T06:37:35+00:00",
             "consent_recorded": "not collected"
           }
         ]
@@ -91,28 +91,28 @@
     },
     {
       "inbox": "test inbox 3",
-      "profile_id": "01M6JKNJPVBQ8F2NTR7XTBXA6B",
+      "profile_id": "01M6JME9P2QQGXHDWQ6EVSCR89",
       "name": "Test OrderFlow-C",
       "properties": {
         "Order Count": 1,
-        "Last Order Date": "2026-11-04T06:24:02+00:00",
-        "Last Order ID": "KLV-TEST-C-73442",
+        "Last Order Date": "2026-11-04T06:37:32+00:00",
+        "Last Order ID": "KLV-TEST-C-74252",
         "Last Order Value": 129.0,
         "Last Order Currency": "USD",
         "Last Order Source": "Stripe"
       },
       "email_marketing_consent": "NEVER_SUBSCRIBED",
       "events_per_order": {
-        "stripe:pi_3UXxc6RzsEovEKB11iDMvYEx": [
+        "stripe:pi_3UXxpARzsEovEKB11fhtxdka": [
           {
             "metric": "Placed Order",
-            "event_id": "7zPaHHHXNct",
-            "OrderId": "KLV-TEST-C-73442",
+            "event_id": "7zPezRHZbfz",
+            "OrderId": "KLV-TEST-C-74252",
             "value": 129.0,
             "items": [
               "Espresso Grinder (TEST)"
             ],
-            "datetime": "2026-11-04T06:24:02+00:00",
+            "datetime": "2026-11-04T06:37:32+00:00",
             "consent_recorded": null
           }
         ]
@@ -120,7 +120,7 @@
     },
     {
       "inbox": "test inbox 4",
-      "profile_id": "01M6JKNWWE49HR8Q04TPKJ08M5",
+      "profile_id": "01M6JMED6BQQBQZR7RBEVNQW49",
       "name": "Test OrderFlow-Shopify",
       "properties": {
         "Order Count": 3,
@@ -132,10 +132,10 @@
       },
       "email_marketing_consent": "NEVER_SUBSCRIBED",
       "events_per_order": {
-        "shopify:1793773444319": [
+        "shopify:1793774254665": [
           {
             "metric": "Placed Order",
-            "event_id": "7zPaGAQSfTG",
+            "event_id": "7zPfcqLj22y",
             "OrderId": "#1001",
             "value": 84.0,
             "items": [
@@ -151,54 +151,54 @@
   ],
   "stripe_redelivery": [
     [
-      "stripe:evt_3UXxc0RzsEovEKB11tMFyIwj",
+      "stripe:evt_3UXxp4RzsEovEKB11Os6Bsfj",
       "done"
     ]
   ],
   "direct_resends_of_first_order": 2,
   "klaviyo_sync_rows": [
     {
-      "event_id": "stripe:evt_3UXxc0RzsEovEKB11tMFyIwj",
-      "order_key": "stripe:pi_3UXxc0RzsEovEKB11Op8Q21A",
+      "event_id": "stripe:evt_3UXxp4RzsEovEKB11Os6Bsfj",
+      "order_key": "stripe:pi_3UXxp4RzsEovEKB11fc5QxCf",
       "kind": "placed",
       "status": "done",
-      "detail": "placed-order:stripe:pi_3UXxc0RzsEovEKB11Op8Q21A"
+      "detail": "placed-order:stripe:pi_3UXxp4RzsEovEKB11fc5QxCf"
     },
     {
-      "event_id": "stripe:evt_3UXxc5RzsEovEKB109FzJ1Bh",
-      "order_key": "stripe:pi_3UXxc5RzsEovEKB105kbgmhZ",
+      "event_id": "stripe:evt_3UXxp9RzsEovEKB10LN9DHw0",
+      "order_key": "stripe:pi_3UXxp9RzsEovEKB10NdFQ7Fj",
       "kind": "placed",
       "status": "done",
-      "detail": "placed-order:stripe:pi_3UXxc5RzsEovEKB105kbgmhZ"
+      "detail": "placed-order:stripe:pi_3UXxp9RzsEovEKB10NdFQ7Fj"
     },
     {
-      "event_id": "stripe:evt_3UXxc6RzsEovEKB114qGrTcx",
-      "order_key": "stripe:pi_3UXxc6RzsEovEKB11iDMvYEx",
+      "event_id": "stripe:evt_3UXxpARzsEovEKB118RWra9n",
+      "order_key": "stripe:pi_3UXxpARzsEovEKB11fhtxdka",
       "kind": "placed",
       "status": "done",
-      "detail": "placed-order:stripe:pi_3UXxc6RzsEovEKB11iDMvYEx"
+      "detail": "placed-order:stripe:pi_3UXxpARzsEovEKB11fhtxdka"
     },
     {
-      "event_id": "stripe:evt_3UXxc7RzsEovEKB11d9KUZ7I",
-      "order_key": "stripe:pi_3UXxc7RzsEovEKB11AnayOn9",
+      "event_id": "shopify:1083ace7-8b89-4856-9965-1c1c9d1bdb30",
+      "order_key": "shopify:1793774254665",
       "kind": "placed",
       "status": "done",
-      "detail": "placed-order:stripe:pi_3UXxc7RzsEovEKB11AnayOn9"
+      "detail": "placed-order:shopify:1793774254665"
     },
     {
-      "event_id": "shopify:f522ab72-93d2-49bf-89ce-62470b61eb92",
-      "order_key": "shopify:1793773444319",
+      "event_id": "stripe:evt_3UXxpBRzsEovEKB11FLJ0qgq",
+      "order_key": "stripe:pi_3UXxpBRzsEovEKB11mescaM8",
       "kind": "placed",
       "status": "done",
-      "detail": "placed-order:shopify:1793773444319"
+      "detail": "placed-order:stripe:pi_3UXxpBRzsEovEKB11mescaM8"
     },
     {
-      "event_id": "stripe:evt_1UXxcARzsEovEKB1MVjAwgUV",
-      "order_key": "stripe:cs_test_a1vp9Hk7VZISO8n4N0GTM131HcW2PTgyNT0DM5KYMdzN9TzVLW4ulwNJF5",
+      "event_id": "stripe:evt_1UXxpERzsEovEKB1faPmJ0t9",
+      "order_key": "stripe:cs_test_a14smC8hRbfFB0uhMAr6KC48smeuWKYpfWmzf1uw53FpbSry9xuekg4uvL",
       "kind": "checkout",
       "status": "done",
-      "detail": "started-checkout:stripe:cs_test_a1vp9Hk7VZISO8n4N0GTM131HcW2PTgyNT0DM5KYMdzN9TzVLW4ulwNJF5"
+      "detail": "started-checkout:stripe:cs_test_a14smC8hRbfFB0uhMAr6KC48smeuWKYpfWmzf1uw53FpbSry9xuekg4uvL"
     }
   ],
-  "first_order_key": "stripe:pi_3UXxc0RzsEovEKB11Op8Q21A"
+  "first_order_key": "stripe:pi_3UXxp4RzsEovEKB11fc5QxCf"
 }
