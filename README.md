@@ -164,7 +164,7 @@ Free Klaviyo account, API revision `2026-10-15`, every customer a fake one on a 
 - **Deliverability:** the flow emails landed in Gmail's spam folder. The account is brand new and sends from a free Gmail address, which Klaviyo itself warns against; a real shop would send from its own authenticated domain.
 - **429 and error handling** are proven with mocked responses (unit tests). A real 429 with `Retry-After: 1` was seen once while probing the API, but the retry path was not exercised live.
 - **A real Shopify webhook delivery** is still pending the Shopify app's protected customer data access (see below), as for the rest of this project.
-- **Test data left in Klaviyo:** the test profiles are named `Test OrderFlow-...` on clearly marked test inboxes. Deleting profiles needs Klaviyo's data privacy scope, which this key does not have, so they were labelled rather than deleted.
+- **Test data left in Klaviyo:** the test profiles are named `Test OrderFlow-...` on clearly marked test inboxes. Deleting profiles needs Klaviyo's data privacy scope, which this key does not have, so they were labelled rather than deleted. After the test the flow was set to Manual, so it sends nothing further.
 
 ## What was tested live (3 November 2026)
 
