@@ -16,7 +16,7 @@ def load_dotenv(path: str = ".env") -> None:
                 os.environ.setdefault(k.strip(), v.strip())
 
 
-@dataclass
+@dataclass(repr=False)
 class Settings:
     shopify_shop: str = ""
     shopify_webhook_secret: str = ""     # the app's client secret
@@ -31,6 +31,9 @@ class Settings:
     subject_prefix: str = ""
     high_value: float = 500.0
     alert_webhook_url: str = ""
+    klaviyo_api_key: str = ""            # private key; Klaviyo sync is off when empty and not dry-run
+    klaviyo_revision: str = "2026-10-15"
+    klaviyo_dry_run: bool = False        # build and log the Klaviyo calls, send nothing
     db_path: str = "data/events.sqlite3"
     host: str = "127.0.0.1"
     port: int = 8000
@@ -51,7 +54,17 @@ class Settings:
             subject_prefix=env.get("SUBJECT_PREFIX", ""),
             high_value=float(env.get("HIGH_VALUE_THRESHOLD", "500")),
             alert_webhook_url=env.get("ALERT_WEBHOOK_URL", ""),
+            klaviyo_api_key=env.get("KLAVIYO_PRIVATE_API_KEY", ""),
+            klaviyo_revision=env.get("KLAVIYO_REVISION", "2026-10-15"),
+            klaviyo_dry_run=env.get("KLAVIYO_DRY_RUN", "").lower() in ("1", "true", "yes"),
             db_path=env.get("EVENT_DB", "data/events.sqlite3"),
             host=env.get("HOST", "127.0.0.1"),
             port=int(env.get("PORT", "8000")),
         )
+
+    @property
+    def klaviyo_enabled(self) -> bool:
+        return bool(self.klaviyo_api_key) or self.klaviyo_dry_run
+
+    def __repr__(self) -> str:  # settings hold secrets; never print them
+        return f"Settings(shop={self.shopify_shop!r}, ai_mode={self.ai_mode!r}, klaviyo={self.klaviyo_enabled})"

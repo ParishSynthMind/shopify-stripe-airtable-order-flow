@@ -14,5 +14,7 @@ jobs:
           python-version: "3.12"
       - name: Install dependencies
         run: pip install -r requirements.txt -r requirements-dev.txt
-      - name: Run tests (Shopify, Stripe, Airtable and Claude are all mocked, no secrets needed)
+      - name: Lint
+        run: ruff check .
+      - name: Run tests (Shopify, Stripe, Airtable, Klaviyo and Claude are all mocked, no secrets needed)
         run: pytest -v

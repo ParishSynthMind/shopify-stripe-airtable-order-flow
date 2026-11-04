@@ -1,0 +1,27 @@
+{
+  "id": "evt_sample_expired_0001",
+  "object": "event",
+  "type": "checkout.session.expired",
+  "livemode": false,
+  "data": {
+    "object": {
+      "id": "cs_test_sample_0001",
+      "object": "checkout.session",
+      "mode": "payment",
+      "status": "expired",
+      "payment_status": "unpaid",
+      "amount_total": 4500,
+      "currency": "usd",
+      "customer_email": "pat.example@example.com",
+      "customer_details": null,
+      "consent": null,
+      "after_expiration": {"recovery": {"enabled": true, "url": "https://buy.stripe.com/r/test_sample"}},
+      "livemode": false,
+      "created": 1793700000,
+      "metadata": {
+        "order_name": "WEB-CART-0001",
+        "items": "[{\"title\": \"Cold Brew Kit\", \"quantity\": 1, \"unit_price\": 45.0}]"
+      }
+    }
+  }
+}

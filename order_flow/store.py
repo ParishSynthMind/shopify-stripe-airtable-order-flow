@@ -3,6 +3,7 @@ second Airtable row or a second email. Airtable's upsert on Order Key is the
 second guard if two deliveries race each other."""
 from __future__ import annotations
 
+import hashlib
 import sqlite3
 import threading
 import time
@@ -21,6 +22,25 @@ CREATE TABLE IF NOT EXISTS events (
     updated_at REAL NOT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_events_order ON events(order_key);
+
+-- Klaviyo sync, kept apart from the order itself: a Klaviyo outage must never
+-- hold up the Airtable row or the team email.
+CREATE TABLE IF NOT EXISTS klaviyo_sync (
+    event_id   TEXT PRIMARY KEY,
+    order_key  TEXT NOT NULL,
+    kind       TEXT NOT NULL,          -- placed / checkout
+    status     TEXT NOT NULL,          -- done / failed / skipped
+    attempts   INTEGER NOT NULL DEFAULT 0,
+    detail     TEXT,
+    body       BLOB,                   -- kept only while failed, for replay
+    updated_at REAL NOT NULL
+);
+-- Orders per customer, for Klaviyo's order count. Only a hash of the email.
+CREATE TABLE IF NOT EXISTS customer_orders (
+    email_hash TEXT NOT NULL,
+    order_key  TEXT NOT NULL,
+    PRIMARY KEY (email_hash, order_key)
+);
 """
 
 
@@ -77,3 +97,35 @@ class EventStore:
     def failed(self) -> list:
         rows = self._db.execute("SELECT event_id, source, body FROM events WHERE status='failed'").fetchall()
         return [{"event_id": r[0], "source": r[1], "body": r[2]} for r in rows]
+
+    # --- Klaviyo -------------------------------------------------------------
+    def klaviyo_mark(self, event_id: str, order_key: str, kind: str, status: str,
+                     detail: str = "", body: Optional[bytes] = None) -> None:
+        with self._lock:
+            self._db.execute(
+                "INSERT INTO klaviyo_sync(event_id, order_key, kind, status, attempts, detail, body, updated_at) "
+                "VALUES (?,?,?,?,1,?,?,?) ON CONFLICT(event_id) DO UPDATE SET status=excluded.status, "
+                "attempts=attempts+1, detail=excluded.detail, body=excluded.body, updated_at=excluded.updated_at",
+                (event_id, order_key, kind, status, detail[:500], body if status == "failed" else None, time.time()))
+            self._db.commit()
+
+    def klaviyo_status(self, event_id: str) -> Optional[dict]:
+        row = self._db.execute("SELECT event_id, order_key, kind, status, attempts, detail FROM klaviyo_sync "
+                               "WHERE event_id=?", (event_id,)).fetchone()
+        keys = ["event_id", "order_key", "kind", "status", "attempts", "detail"]
+        return dict(zip(keys, row)) if row else None
+
+    def klaviyo_failed(self) -> list:
+        rows = self._db.execute("SELECT k.event_id, k.kind, e.source, k.body FROM klaviyo_sync k "
+                                "JOIN events e ON e.event_id = k.event_id WHERE k.status='failed'").fetchall()
+        return [{"event_id": r[0], "kind": r[1], "source": r[2], "body": r[3]} for r in rows]
+
+    def count_customer_order(self, email: str, order_key: str) -> int:
+        """Records this order against the customer (idempotent) and returns how
+        many distinct orders that customer has had through this service."""
+        h = hashlib.sha256((email or "").strip().lower().encode()).hexdigest()
+        with self._lock:
+            self._db.execute("INSERT OR IGNORE INTO customer_orders(email_hash, order_key) VALUES (?,?)",
+                             (h, order_key))
+            self._db.commit()
+            return self._db.execute("SELECT COUNT(*) FROM customer_orders WHERE email_hash=?", (h,)).fetchone()[0]

@@ -113,7 +113,8 @@ def main():
                                          headers={"Content-Type": "application/json", "X-Shopify-Topic": "orders/paid",
                                                   "X-Shopify-Shop-Domain": s.shopify_shop,
                                                   "X-Shopify-Event-Id": str(uuid.uuid4()),
-                                                  "X-Shopify-Hmac-Sha256": shopify_signature(s.shopify_webhook_secret, body)})
+                                                  "X-Shopify-Hmac-Sha256":
+                                                      shopify_signature(s.shopify_webhook_secret, body)})
             with urllib.request.urlopen(req, timeout=15) as r:
                 print("[shopify simulated] ->", r.status, r.read().decode())
             keys.append(f"shopify:{order_id}")

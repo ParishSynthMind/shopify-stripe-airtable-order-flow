@@ -2,6 +2,7 @@
 
 POST /webhooks/shopify   Shopify orders/paid
 POST /webhooks/stripe    Stripe payment_intent.succeeded / checkout.session.completed
+                         (and checkout.session.expired when Klaviyo is configured)
 GET  /health
 """
 from __future__ import annotations
@@ -16,6 +17,7 @@ from .airtable import AirtableClient
 from .alerts import Alerter
 from .app import MAX_BODY, WebhookApp
 from .config import Settings, load_dotenv
+from .klaviyo import KlaviyoClient, KlaviyoSync
 from .notifiers import from_env as notifier_from_env
 from .pipeline import OrderPipeline
 from .store import EventStore
@@ -27,12 +29,17 @@ def build_app(settings: Settings, notifier=None) -> WebhookApp:
     store = EventStore(settings.db_path)
     notifier = notifier or notifier_from_env()
     reviewer = RulesReviewer() if settings.ai_mode == "rules" else AnthropicReviewer(settings.anthropic_model)
+    klaviyo = None
+    if settings.klaviyo_enabled:
+        klaviyo = KlaviyoSync(KlaviyoClient(settings.klaviyo_api_key, settings.klaviyo_revision,
+                                            dry_run=settings.klaviyo_dry_run), store)
     pipeline = OrderPipeline(
         reviewer=reviewer,
         airtable=AirtableClient(settings.airtable_token, settings.airtable_base_id, settings.airtable_table),
         notifier=notifier,
         alerter=Alerter(settings.alert_webhook_url, notifier, settings.subject_prefix),
         store=store, subject_prefix=settings.subject_prefix, high_value=settings.high_value,
+        klaviyo=klaviyo,
     )
     stripe = StripeClient(settings.stripe_secret_key) if settings.stripe_secret_key else None
     return WebhookApp(settings, pipeline, store, stripe=stripe)

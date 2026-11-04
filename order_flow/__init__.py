@@ -1,2 +1,2 @@
-"""Paid order -> verified webhook -> Claude note/risk flag -> Airtable row -> team email."""
-__version__ = "1.0.0"
+"""Paid order -> verified webhook -> Claude note/risk flag -> Airtable row -> Klaviyo profile/event -> team email."""
+__version__ = "1.1.0"

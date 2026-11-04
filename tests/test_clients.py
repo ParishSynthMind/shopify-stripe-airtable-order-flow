@@ -63,7 +63,8 @@ def test_stripe_test_payment_form():
 def test_shopify_token_minted_once_and_reused():
     rec = Recorder({"access_token": "tok"}, {"data": {"shop": {}}}, {"data": {"shop": {}}})
     c = ShopifyClient("demo.myshopify.com", "cid", "csecret", send=rec)
-    c.shop_info(); c.shop_info()
+    c.shop_info()
+    c.shop_info()
     assert [x["url"].rsplit("/", 1)[-1] for x in rec.calls] == ["access_token", "graphql.json", "graphql.json"]
     assert rec.calls[0]["form"]["grant_type"] == "client_credentials"
     assert rec.calls[1]["headers"]["X-Shopify-Access-Token"] == "tok"

@@ -16,5 +16,5 @@ def settings() -> Settings:
 def set_env_value(key: str, value: str, path: Path = ROOT / ".env") -> None:
     """Writes KEY=value into .env (git-ignored) without ever printing the value."""
     lines = path.read_text().splitlines() if path.exists() else []
-    lines = [l for l in lines if not l.startswith(f"{key}=")] + [f"{key}={value}"]
+    lines = [line for line in lines if not line.startswith(f"{key}=")] + [f"{key}={value}"]
     path.write_text("\n".join(lines) + "\n")

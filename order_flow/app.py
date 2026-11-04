@@ -17,6 +17,8 @@ log = logging.getLogger("order_flow.app")
 MAX_BODY = 1_000_000
 STRIPE_EVENTS = {"payment_intent.succeeded", "checkout.session.completed",
                  "checkout.session.async_payment_succeeded"}
+# Only acted on when Klaviyo is configured: becomes a 'Started Checkout' event.
+STRIPE_ABANDONED = "checkout.session.expired"
 
 
 class WebhookApp:
@@ -35,7 +37,12 @@ class WebhookApp:
         while True:
             job = self.jobs.get()
             try:
-                self.pipeline.process(*job)
+                if job[0] == "abandoned":
+                    _, event_id, obj, raw, url, consent = job
+                    self.pipeline.process_abandoned(
+                        event_id, lambda: normalize.from_stripe_checkout_session(obj), raw, url, consent)
+                else:
+                    self.pipeline.process(*job)
             finally:
                 self.jobs.task_done()
 
@@ -57,7 +64,30 @@ class WebhookApp:
             else:
                 etype, obj = event["type"], event["data"]["object"]
                 loader = (lambda t, o: lambda: self._stripe_order(t, o))(etype, obj)
+            if item["source"] == "Stripe" and event["type"] == STRIPE_ABANDONED:
+                results.append(self.pipeline.process_abandoned(item["event_id"], loader, item["body"],
+                                                               *self._checkout_extras(event["data"]["object"])))
+                continue
             results.append(self.pipeline.process(item["event_id"], loader, item["body"]))
+        return results
+
+    def replay_klaviyo(self) -> list:
+        """Re-sends only the Klaviyo step for orders whose Klaviyo sync failed.
+        The Airtable row and team email already happened and are not repeated.
+        Safe to repeat: Klaviyo drops an event whose unique_id it has seen."""
+        results = []
+        for item in self.store.klaviyo_failed():
+            event = json.loads(item["body"])
+            if item["source"] == "Shopify":
+                order = normalize.from_shopify(event)
+                extras = ("", "")
+            else:
+                obj = event["data"]["object"]
+                if item["kind"] == "checkout":
+                    order, extras = normalize.from_stripe_checkout_session(obj), self._checkout_extras(obj)
+                else:
+                    order, extras = self._stripe_order(event["type"], obj), ("", "")
+            results.append(self.pipeline.sync_klaviyo(item["event_id"], order, item["body"], item["kind"], *extras))
         return results
 
     # --- routing ------------------------------------------------------------
@@ -104,6 +134,8 @@ class WebhookApp:
             return 400, {"error": "invalid signature"}
         event = json.loads(body)
         etype = event.get("type", "")
+        if etype == STRIPE_ABANDONED and self.pipeline.klaviyo:
+            return self._stripe_abandoned(event, body)
         if etype not in STRIPE_EVENTS:
             return 200, {"ignored": etype}
         obj = event["data"]["object"]
@@ -117,6 +149,27 @@ class WebhookApp:
             return 200, {"skipped": claim}
         self._submit(event_id, lambda: self._stripe_order(etype, obj), body)
         return 200, {"queued": event_id}
+
+    def _stripe_abandoned(self, event: dict, body: bytes) -> Tuple[int, dict]:
+        obj = event["data"]["object"]
+        if obj.get("mode") not in (None, "payment") or obj.get("payment_status") == "paid":
+            return 200, {"ignored": "checkout session not abandoned"}
+        event_id = f"stripe:{event['id']}"
+        claim = self.store.claim(event_id, f"checkout:{obj['id']}", "Stripe")
+        if claim != "new":
+            return 200, {"skipped": claim}
+        url, consent = self._checkout_extras(obj)
+        if self.sync:
+            self.pipeline.process_abandoned(event_id, lambda: normalize.from_stripe_checkout_session(obj),
+                                            body, url, consent)
+        else:
+            self.jobs.put(("abandoned", event_id, obj, body, url, consent))
+        return 200, {"queued": event_id}
+
+    @staticmethod
+    def _checkout_extras(obj: dict) -> Tuple[str, str]:
+        recovery = ((obj.get("after_expiration") or {}).get("recovery") or {})
+        return str(recovery.get("url") or ""), str((obj.get("consent") or {}).get("promotions") or "")
 
     def _stripe_order(self, etype: str, obj: dict):
         charge = None
