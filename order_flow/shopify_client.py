@@ -5,7 +5,7 @@ from typing import Callable, Optional
 
 from .http import request
 
-API_VERSION = "2025-10"
+API_VERSION = "2026-10"  # latest stable, supported until 2027-10-16 (shopify.dev versioning, read 2026-11-17)
 
 
 class ShopifyClient:
@@ -34,7 +34,7 @@ class ShopifyClient:
         return resp["data"]
 
     def shop_info(self) -> dict:
-        return self.graphql("{ shop { name currencyCode plan { displayName } } "
+        return self.graphql("{ shop { name currencyCode plan { publicDisplayName } } "
                             "currentAppInstallation { accessScopes { handle } } }")
 
     def recent_orders(self, first: int = 5) -> list:
@@ -45,7 +45,7 @@ class ShopifyClient:
 
     def subscribe_orders_paid(self, callback_url: str) -> dict:
         data = self.graphql(
-            "mutation($u:URL!){ webhookSubscriptionCreate(topic: ORDERS_PAID, "
-            "webhookSubscription:{callbackUrl:$u, format:JSON}){ webhookSubscription{ id topic } "
+            "mutation($u:String!){ webhookSubscriptionCreate(topic: ORDERS_PAID, "
+            "webhookSubscription:{uri:$u, format:JSON}){ webhookSubscription{ id topic } "
             "userErrors{ field message } } }", {"u": callback_url})
         return data["webhookSubscriptionCreate"]
