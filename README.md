@@ -2,6 +2,8 @@
 
 A small service that sits behind an online shop. When an order is paid, Shopify or Stripe sends a webhook; the service checks the signature, asks Claude for a short note for the packing team and a risk call, writes the order into an Airtable table, and emails the team. Risky orders arrive flagged, with the reasons, so a person checks them before anything ships.
 
+**Status:** tested live on Stripe test mode, a free Airtable base and a free Klaviyo account (3 and 4 November 2026). A real Shopify order webhook has NOT been received (the Shopify side was tested with signed sample deliveries), and the Shopify API version was moved to 2026-10 on 17 November without a new live run.
+
 It can also keep **Klaviyo** in step: each paid order upserts the customer as a Klaviyo profile and sends a `Placed Order` event (value and line items), so a Klaviyo flow can send the thank-you or review email by itself. An abandoned Stripe Checkout becomes a `Started Checkout` event for an abandoned-cart flow. See [Klaviyo](#klaviyo).
 
 ![Live run: three paid test orders in Airtable with Claude's notes and risk flags](media/airtable-orders.png)
